@@ -1,0 +1,7 @@
+-- if user wanna add new model in car model table.
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_car_model`(in name varchar(15),in model_id varchar(5),in availability varchar(15),in price double,in car_company varchar(15)) BEGIN declare cid varchar(5); select comapny_id into cid from car_company where company_name=car_company; insert into car_model(model_year,model_id,model_name,availability,base_price,fk_company_id _model) values (year(curdate()),model_id,name,availability,price,cid); END
+
+-- In this procedure user need to enter the data in car table(means user is going to by a car) but if in car model table availabity's status is "not available" for the car model chose by user he or she can not add this(buy model)..  
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CAR3`(IN CARid varchar(5),IN options_id varchar(5),IN customer_id varchar(5),in model__id varchar(5),in date1 date) BEGIN  declare state varchar(15); declare done int default 0; declare c1 cursor for select availability from car_model where model_id=model__id; DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1; open c1;  read_loop: loop  fetch c1 into state;  if done then         leave read_loop;   end if;                  if state = 'Not-available'        then   SIGNAL SQLSTATE '45000'      SET MESSAGE_TEXT = 'Model Not Available right now';        else   insert into car(CAR_id,fk_option_id_car,fk_customer_id_car,fk_model_id_car,ddate)        values (CARid,options_id,customer_id,model_id,date1);        end if;         end loop;         close c1;  END 
